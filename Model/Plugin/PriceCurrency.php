@@ -31,4 +31,25 @@ class PriceCurrency extends PriceFormatPluginAbstract
 
         return $proceed(...$args);
     }
+    
+    public function beforeConvertAndRound(
+        $subject,
+        $amount,
+        $scope = null,
+        $currency = null,
+        $precision = \Magento\Directory\Model\PriceCurrency::DEFAULT_PRECISION
+    ) {
+        return [$amount, $scope, $currency, $this->getPricePrecision()];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function aroundRound(
+        \Magento\Directory\Model\PriceCurrency $subject,
+        callable $proceed,
+        ...$args
+    ) {
+        return round($args[0], $this->getPricePrecision());
+    }   
 }
